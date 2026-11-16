@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#242834">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>AfroDesk</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+:root{--bg:#171a24;--pn:#242834;--tx:#ECEBF5;--mu:#8e93a8;--bd:#363b4f;--p:#7D53FF;--a:#FF5400;--sf:Georgia,'Times New Roman',serif}
+[data-theme=light]{--bg:#F7F2EA;--pn:#fff;--tx:#242834;--mu:#6f7385;--bd:#e3dccf}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:1px solid var(--bd);border-radius:8px;padding:6px 10px;cursor:pointer}
+button:hover{border-color:var(--p)}button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--p);outline-offset:1px}
+#app{display:flex;flex-direction:column;height:100dvh;padding-top:env(safe-area-inset-top)}
+header{position:relative;display:flex;align-items:center;gap:8px;padding:8px 12px;flex:none}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--p),var(--a))}
+#brand{display:flex;align-items:center;gap:8px;border:0;padding:0;letter-spacing:.2em;font-size:12px}
+#brand img{width:28px;height:28px;border-radius:7px}
+.sp{flex:1}#sv{font-size:11px;color:var(--mu)}
+.pill{padding:4px 9px;font-size:13px}.pill.on{background:var(--p);border-color:var(--p);color:#fff}
+.v{display:none;flex:1;min-height:0;flex-direction:column}.v.on{display:flex}
+/* splash */
+#sp{position:fixed;inset:0;z-index:50;background:#F7F2EA;color:#242834;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px;transition:opacity .35s}
+#sp.out{opacity:0}
+#sp img{width:112px;height:112px;border-radius:26px;box-shadow:0 0 44px rgba(125,83,255,.45);animation:zm 2s ease-in-out both}
+@keyframes zm{0%{transform:scale(.7);opacity:0}35%{transform:scale(1.08);opacity:1}60%{transform:scale(.97)}100%{transform:scale(1.03)}}
+#sp h1{font-weight:300;font-size:30px;letter-spacing:.3em;margin:12px 0 0;padding-left:.3em;animation:fi .8s .3s both}
+#sp p{margin:0;animation:fi .8s .5s both}#sp .dv{font-size:12px;color:#6f7385;animation-delay:.7s}
+#sp .ft{position:absolute;bottom:calc(36px + env(safe-area-inset-bottom));font-size:11px;letter-spacing:.25em;color:#8a8ea0;animation:fi .8s .9s both}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* launch */
+#lc{flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px;padding:20px;max-width:640px;width:100%;margin:0 auto}
+#lc h2{font-family:var(--sf);font-weight:400;font-size:26px;line-height:1.25;margin:0}
+#lc h2 span{color:var(--mu);display:block;font-size:19px}
+.mc{text-align:left;padding:18px;border-radius:14px;background:var(--pn);border-top:3px solid var(--p);display:block;width:100%}
+.mc.d{border-top-color:var(--a)}.mc b{font-size:17px}.mc small{display:block;color:var(--mu);margin-top:4px;font-size:13px}
+.cnt{color:var(--mu);font-size:12px}
+/* notes */
+#tabs{display:flex;gap:4px;padding:6px 12px 0;overflow-x:auto;flex:none}
+.tab{border-radius:8px 8px 0 0;border-bottom:0;padding:5px 12px;white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis;color:var(--mu)}
+.tab.on{background:var(--pn);color:var(--tx);border-color:var(--bd)}
+#tb{display:flex;gap:6px;align-items:center;padding:6px 12px;overflow-x:auto;flex:none;background:var(--pn);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+#tb button{padding:4px 10px;flex:none}
+#ed{flex:1;min-height:0;overflow:auto;padding:14px 12px 30px}
+.pg{max-width:720px;margin:0 auto;background:var(--pn);border:1px solid var(--bd);border-radius:10px;padding:18px 20px;min-height:100%}
+#nt{width:100%;background:none;border:0;border-bottom:2px solid var(--a);color:var(--tx);font:700 24px var(--sf);padding:2px 0 8px;margin-bottom:12px}
+#nb{width:100%;min-height:55vh;background:none;border:0;resize:none;color:var(--tx);font:17px/1.7 var(--sf);display:block}
+#nb::placeholder,#nt::placeholder{color:var(--mu)}
+#pv{display:none;font:17px/1.7 var(--sf)}#pv h1,#pv h2,#pv h3{margin:.6em 0 .2em}#pv p{margin:.4em 0}#pv code{background:var(--bg);padding:1px 5px;border-radius:4px}#pv a{color:var(--p)}
+.ck,.li{margin:.2em 0}
+.prev #nb{display:none}.prev #pv{display:block}
+/* desk */
+#cv{flex:1;position:relative;overflow:hidden;touch-action:none;background-image:radial-gradient(var(--bd) 1.3px,transparent 1.3px)}
+#wd{position:absolute;left:0;top:0;transform-origin:0 0}
+#lk{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible}
+#lk line{stroke:var(--p);stroke-width:2.5;stroke-linecap:round}
+.card{position:absolute;width:180px;background:var(--pn);border:1px solid var(--bd);border-top:4px solid var(--c);border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.card.sel{outline:2px solid var(--c);outline-offset:2px}
+.ch{display:flex;align-items:center;gap:4px;padding:2px 4px 2px 8px;cursor:grab;font-size:10px;letter-spacing:.15em;color:var(--mu)}
+.ch span{flex:1}.ch button{border:0;padding:2px 6px;font-size:12px;color:var(--c)}.ch button+button{color:var(--mu)}
+.card textarea{width:100%;height:80px;resize:vertical;background:none;border:0;color:var(--tx);font:14px/1.4 system-ui;padding:2px 8px 8px;display:block}
+.cn{padding:0 8px 8px;font-size:13px;max-height:140px;overflow:hidden;cursor:pointer}.cn h4{margin:0 0 3px;font-size:14px}.cn p{margin:2px 0}
+#dt{position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:6px;background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:6px;box-shadow:0 6px 24px rgba(0,0,0,.35);max-width:96vw;overflow-x:auto}
+#dt button{border:0;flex:none;padding:6px 10px}#dt button.on{background:var(--a);color:#fff}
+/* sheet + toast */
+#sh{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center}
+#sh.on{display:flex}#sh div{background:var(--pn);width:100%;max-width:460px;border-radius:16px 16px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px}
+#sh h3{margin:0 0 4px;font-size:14px;color:var(--mu);font-weight:500}#sh button{text-align:left;padding:11px 12px}
+#ts{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:var(--p);color:#fff;padding:8px 14px;border-radius:20px;font-size:13px;z-index:60;opacity:0;pointer-events:none;transition:opacity .25s}#ts.on{opacity:1}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
+</style>
+</head>
+<body>
+<div id="sp">
+  <img src="logo.png" alt="AfroDesk logo">
+  <h1>AFRODESK</h1>
+  <p>Capture Inspiration. Structure Ideas. Find Clarity.</p>
+  <p class="dv">Developed by Last Dulani</p>
+  <div class="ft">IDEA · ORDER · MOMENTUM</div>
+</div>
+
+<div id="app">
+  <header>
+    <button id="brand" aria-label="Home"><img src="logo.png" alt=""><span>AFRODESK</span></button>
+    <span class="sp"></span><span id="sv">Saved</span>
+    <button class="pill" data-go="notes">Notes</button>
+    <button class="pill" data-go="desk">Desk</button>
+    <button id="lang" class="pill" title="Language">EN</button>
+    <button id="th" class="pill" aria-label="Toggle theme">☀</button>
+  </header>
+
+  <section class="v on" id="v-launch"><div id="lc">
+    <h2>Hi, welcome to AfroDesk.<span>What are you drafting today?</span></h2>
+    <button class="mc" data-go="notes"><b>Notes</b><small>Fast, quiet capture. Markdown scratchpad for ideas, outlines, links and checklists.</small></button>
+    <button class="mc d" data-go="desk"><b>Desk</b><small>An open canvas to pan, zoom and connect cards: mind maps, flows, storyboards.</small></button>
+    <div class="cnt" id="cnt"></div>
+  </div></section>
+
+  <section class="v" id="v-notes">
+    <div id="tabs"></div>
+    <div id="tb">
+      <button data-f="b"><b>B</b></button><button data-f="i"><i>I</i></button><button data-f="h">H</button><button data-f="l">• List</button><button data-f="c">☐ Task</button><button data-f="k">Link</button>
+      <span class="sp"></span>
+      <button id="pvb">Preview</button><button id="todesk">Send to Desk</button><button id="more">More</button>
+    </div>
+    <div id="ed"><div class="pg" id="pg">
+      <input id="nt" placeholder="Untitled" autocomplete="off">
+      <textarea id="nb" placeholder="Start writing here. Everything saves on your device."></textarea>
+      <div id="pv"></div>
+    </div></div>
+  </section>
+
+  <section class="v" id="v-desk">
+    <div id="cv">
+      <div id="wd"><svg id="lk"></svg></div>
+      <div id="dt">
+        <button id="addc">+ Card</button><button id="addn">From note</button><button id="lkb">Link</button><button id="fit">Fit</button><button id="dex">Export</button>
+      </div>
+    </div>
+  </section>
+</div>
+<div id="sh"><div id="shb"></div></div><div id="ts"></div>
+<input type="file" id="imp" accept=".json" hidden>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const uid=()=>Math.random().toString(36).slice(2,9);
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const COL=['#7D53FF','#FF5400','#2FB6A3','#E8B923','#8A93A8'];
+/* ---------- local database (IndexedDB) ---------- */
+let _db;const DB={
+ o(){return _db||(_db=new Promise((r,j)=>{const q=indexedDB.open('afrodesk',1);q.onupgradeneeded=()=>q.result.createObjectStore('kv');q.onsuccess=()=>r(q.result);q.onerror=j}))},
+ async get(k){const d=await this.o();return new Promise(r=>{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>r(q.result)})},
+ async set(k,v){const d=await this.o();return new Promise(r=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=r})}};
+let S={notes:[],cards:[],links:[],V:{x:60,y:60,k:1},cur:null,theme:'dark'},selId=null,linkMode=false,linkFrom=null,tm;
+const save=()=>{$('#sv').textContent='Saving…';clearTimeout(tm);tm=setTimeout(async()=>{try{await DB.set('s',S)}catch(e){}$('#sv').textContent='Saved'},350)};
+function toast(m){const t=$('#ts');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1800)}
+function sheet(title,items){$('#shb').innerHTML=`<h3>${title}</h3>`;items.forEach(([l,f])=>{const b=document.createElement('button');b.textContent=l;b.onclick=()=>{$('#sh').classList.remove('on');f&&f()};$('#shb').appendChild(b)});$('#sh').classList.add('on')}
+$('#sh').onclick=e=>{if(e.target.id=='sh')$('#sh').classList.remove('on')};
+function dl(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+/* ---------- markdown ---------- */
+function inl(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\*(.+?)\*/g,'<i>$1</i>').replace(/`(.+?)`/g,'<code>$1</code>').replace(/\[(.+?)\]\((https?:[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')}
+function md(t){let o='';(t||'').split('\n').forEach(l=>{let m;
+ if(m=l.match(/^(#{1,3}) (.*)/))o+=`<h${m[1].length}>${inl(m[2])}</h${m[1].length}>`;
+ else if(m=l.match(/^- \[( |x)\] (.*)/i))o+=`<div class=ck>${m[1]==' '?'☐':'☑'} ${inl(m[2])}</div>`;
+ else if(m=l.match(/^[-*] (.*)/))o+=`<div class=li>• ${inl(m[1])}</div>`;
+ else if(l.trim())o+=`<p>${inl(l)}</p>`});return o}
+/* ---------- navigation ---------- */
+function go(m){S.mode=m;$$('.v').forEach(v=>v.classList.toggle('on',v.id=='v-'+m));$$('header .pill[data-go]').forEach(b=>b.classList.toggle('on',b.dataset.go==m));
+ if(m=='launch')$('#cnt').textContent=`${S.notes.length} notes · ${S.cards.length} cards on your device`;
+ if(m=='notes'){if(!S.notes.length)newNote();if(!cur())S.cur=S.notes[0].id;tabs();load()}
+ if(m=='desk'){view();rc()}}
+$$('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));$('#brand').onclick=()=>go('launch');
+$('#th').onclick=()=>{S.theme=S.theme=='dark'?'light':'dark';applyTheme();save()};
+function applyTheme(){document.documentElement.dataset.theme=S.theme;$('#th').textContent=S.theme=='dark'?'☀':'☾'}
+$('#lang').onclick=()=>toast('chiShona + English toggle is coming later');
+/* ---------- notes ---------- */
+const cur=()=>S.notes.find(n=>n.id==S.cur);
+function newNote(){const n={id:uid(),t:'',b:'',u:Date.now()};S.notes.push(n);S.cur=n.id;save();return n}
+function tabs(){$('#tabs').innerHTML=S.notes.map(n=>`<button class="tab ${n.id==S.cur?'on':''}" data-id="${n.id}">${esc(n.t)||'Untitled'}</button>`).join('')+'<button class="tab" id="nn">+</button>'}
+$('#tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.id=='nn'){newNote();}else S.cur=b.dataset.id;$('#pg').classList.remove('prev');$('#pvb').textContent='Preview';tabs();load()};
+function load(){const n=cur();$('#nt').value=n.t;$('#nb').value=n.b}
+$('#nt').oninput=e=>{cur().t=e.target.value;cur().u=Date.now();tabs();save()};
+$('#nb').oninput=e=>{cur().b=e.target.value;cur().u=Date.now();save()};
+$('#pvb').onclick=()=>{const p=$('#pg').classList.toggle('prev');$('#pvb').textContent=p?'Edit':'Preview';if(p)$('#pv').innerHTML=md($('#nb').value)||'<p style="color:var(--mu)">Nothing to preview yet.</p>'};
+$$('[data-f]').forEach(b=>b.onclick=()=>{$('#pg').classList.remove('prev');$('#pvb').textContent='Preview';const t=$('#nb'),s=t.selectionStart,e=t.selectionEnd,v=t.value,sel=v.slice(s,e),f=b.dataset.f;
+ const W=(a,z)=>{t.setRangeText(a+(sel||'text')+z,s,e,'select')},P=p=>{const ls=v.lastIndexOf('\n',s-1)+1;t.setRangeText(p,ls,ls,'end')};
+ f=='b'?W('**','**'):f=='i'?W('*','*'):f=='h'?P('## '):f=='l'?P('- '):f=='c'?P('- [ ] '):W('[',']('+'https://)');
+ t.focus();t.dispatchEvent(new Event('input'))});
+$('#todesk').onclick=()=>{const n=cur();if(S.cards.some(c=>c.n==n.id)){toast('Already on your Desk');return go('desk')}addCard({n:n.id});toast('Added to Desk');go('desk')};
+const outline=n=>'# '+(n.t||'Untitled')+'\n\n'+n.b.split('\n').filter(l=>/^(#{1,3} |[-*] )/.test(l)).join('\n')+'\n';
+$('#more').onclick=()=>{const n=cur(),fn=(n.t||'note').replace(/[^\w-]+/g,'_');sheet('Note options',[
+ ['Export note as .md',()=>dl(fn+'.md','# '+n.t+'\n\n'+n.b,'text/markdown')],
+ ['Export outline for AfroWriter',()=>dl(fn+'-outline.txt',outline(n),'text/plain')],
+ ['Back up everything (.json)',()=>dl('afrodesk-backup.json',JSON.stringify(S),'application/json')],
+ ['Import backup (.json)',()=>$('#imp').click()],
+ ['Delete this note',()=>{if(!confirm('Delete this note? This cannot be undone.'))return;S.cards=S.cards.filter(c=>c.n!=n.id);S.links=S.links.filter(l=>S.cards.some(c=>c.id==l.a)&&S.cards.some(c=>c.id==l.b));S.notes=S.notes.filter(x=>x.id!=n.id);S.cur=null;save();go('notes')}]])};
+$('#imp').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const d=JSON.parse(t);if(!Array.isArray(d.notes))throw 0;if(!confirm('Replace everything on this device with the backup?'))return;S=Object.assign(S,d);applyTheme();save();go('notes');toast('Backup imported')}catch(x){toast('That file is not an AfroDesk backup')}});e.target.value=''};
+/* ---------- desk ---------- */
+const V=()=>S.V;
+function view(){const v=V();$('#wd').style.transform=`translate(${v.x}px,${v.y}px) scale(${v.k})`;const g=26*v.k;$('#cv').style.backgroundSize=g+'px '+g+'px';$('#cv').style.backgroundPosition=v.x+'px '+v.y+'px'}
+function addCard(o){const r=$('#cv').getBoundingClientRect(),v=V(),j=Math.random()*40;
+ const c=Object.assign({id:uid(),x:(r.width/2-v.x)/v.k-90+j,y:(r.height/2-v.y)/v.k-60+j,t:'',k:0},o);S.cards.push(c);selId=c.id;save();rc();return c}
+function rc(){const w=$('#wd');w.querySelectorAll('.card').forEach(x=>x.remove());
+ S.cards.forEach(c=>{const d=document.createElement('div'),nt=c.n&&S.notes.find(n=>n.id==c.n);d.className='card'+(c.id==selId?' sel':'');d.dataset.id=c.id;d.style.cssText=`left:${c.x}px;top:${c.y}px;--c:${COL[c.k||0]}`;
+  d.innerHTML=`<div class=ch><span>${c.n?'NOTE':'IDEA'}</span><button data-a=col aria-label="Colour">●</button><button data-a=del aria-label="Delete">✕</button></div>`+(c.n?`<div class=cn>${nt?`<h4>${esc(nt.t)||'Untitled'}</h4>${md(nt.b.slice(0,260))}`:'<i>Note was deleted</i>'}</div>`:`<textarea placeholder="Type an idea">${esc(c.t)}</textarea>`);
+  w.appendChild(d)});links()}
+const cw=c=>{const e=$(`.card[data-id="${c.id}"]`);return[c.x+90,c.y+(e?e.offsetHeight:90)/2]};
+function links(){$('#lk').innerHTML=S.links.map(l=>{const a=S.cards.find(c=>c.id==l.a),b=S.cards.find(c=>c.id==l.b);if(!a||!b)return'';const[x1,y1]=cw(a),[x2,y2]=cw(b);return`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`}).join('')}
+const P=new Map();let dr=null,pn=null;
+const cv=$('#cv'),pd=()=>{const[a,b]=[...P.values()];return Math.hypot(a.x-b.x,a.y-b.y)||1};
+cv.addEventListener('pointerdown',e=>{if(e.target.closest('button,textarea,#dt'))return;cv.setPointerCapture(e.pointerId);P.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(P.size==2){dr=null;const[a,b]=[...P.values()],r=cv.getBoundingClientRect(),v=V();pn={d:pd(),k:v.k,wx:((a.x+b.x)/2-r.left-v.x)/v.k,wy:((a.y+b.y)/2-r.top-v.y)/v.k};return}
+ const cd=e.target.closest('.card');
+ if(cd){const id=cd.dataset.id;if(linkMode){doLink(id);return}selId=id;$$('.card').forEach(x=>x.classList.toggle('sel',x==cd));
+  if(e.target.closest('.cn')){dr={open:S.cards.find(c=>c.id==id).n,sx:e.clientX,sy:e.clientY}}
+  else if(e.target.closest('.ch')){const c=S.cards.find(c=>c.id==id);dr={c,el:cd,sx:e.clientX,sy:e.clientY,ox:c.x,oy:c.y}}}
+ else{selId=null;$$('.card.sel').forEach(x=>x.classList.remove('sel'));dr={pan:1,sx:e.clientX,sy:e.clientY,ox:V().x,oy:V().y}}});
+cv.addEventListener('pointermove',e=>{if(!P.has(e.pointerId))return;P.set(e.pointerId,{x:e.clientX,y:e.clientY});const v=V();
+ if(pn&&P.size==2){const[a,b]=[...P.values()],r=cv.getBoundingClientRect();v.k=Math.min(3,Math.max(.25,pn.k*pd()/pn.d));v.x=(a.x+b.x)/2-r.left-pn.wx*v.k;v.y=(a.y+b.y)/2-r.top-pn.wy*v.k;view();return}
+ if(!dr)return;const dx=e.clientX-dr.sx,dy=e.clientY-dr.sy;
+ if(dr.pan){v.x=dr.ox+dx;v.y=dr.oy+dy;view()}
+ else if(dr.c){dr.c.x=dr.ox+dx/v.k;dr.c.y=dr.oy+dy/v.k;dr.el.style.left=dr.c.x+'px';dr.el.style.top=dr.c.y+'px';links()}});
+const up=e=>{if(dr&&dr.open&&Math.hypot(e.clientX-dr.sx,e.clientY-dr.sy)<6){S.cur=dr.open;if(cur()){go('notes')}}
+ if(dr&&(dr.c||dr.pan))save();P.delete(e.pointerId);if(P.size<2)pn=null;if(!P.size)dr=null};
+cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+cv.addEventListener('wheel',e=>{e.preventDefault();const v=V(),r=cv.getBoundingClientRect(),k=Math.min(3,Math.max(.25,v.k*(e.deltaY<0?1.1:.9))),wx=(e.clientX-r.left-v.x)/v.k,wy=(e.clientY-r.top-v.y)/v.k;v.k=k;v.x=e.clientX-r.left-wx*k;v.y=e.clientY-r.top-wy*k;view();save()},{passive:false});
+cv.addEventListener('dblclick',e=>{if(e.target!==cv&&e.target.id!='wd')return;const r=cv.getBoundingClientRect(),v=V();addCard({x:(e.clientX-r.left-v.x)/v.k-90,y:(e.clientY-r.top-v.y)/v.k-20})});
+cv.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const id=b.closest('.card').dataset.id,c=S.cards.find(c=>c.id==id);
+ if(b.dataset.a=='col'){c.k=((c.k||0)+1)%COL.length;save();rc()}
+ else{S.cards=S.cards.filter(x=>x.id!=id);S.links=S.links.filter(l=>l.a!=id&&l.b!=id);save();rc()}});
+cv.addEventListener('input',e=>{if(e.target.tagName!='TEXTAREA')return;S.cards.find(c=>c.id==e.target.closest('.card').dataset.id).t=e.target.value;save()});
+function doLink(id){if(!linkFrom){linkFrom=id;toast('Now tap the card to connect');return}if(linkFrom==id){linkFrom=null;return}
+ const i=S.links.findIndex(l=>(l.a==linkFrom&&l.b==id)||(l.a==id&&l.b==linkFrom));if(i>=0){S.links.splice(i,1);toast('Link removed')}else S.links.push({id:uid(),a:linkFrom,b:id});linkFrom=null;save();links()}
+$('#addc').onclick=()=>{const c=addCard({});setTimeout(()=>{const t=$(`.card[data-id="${c.id}"] textarea`);t&&t.focus()},50)};
+$('#lkb').onclick=()=>{linkMode=!linkMode;linkFrom=null;$('#lkb').classList.toggle('on',linkMode);toast(linkMode?'Link mode: tap two cards (again to unlink)':'Link mode off')};
+$('#addn').onclick=()=>{const free=S.notes.filter(n=>!S.cards.some(c=>c.n==n.id));if(!free.length)return toast('Every note is already on the Desk');
+ sheet('Add a note as a card',free.map(n=>[n.t||'Untitled',()=>addCard({n:n.id})]))};
+$('#fit').onclick=()=>{if(!S.cards.length){S.V={x:60,y:60,k:1};return view()}const r=cv.getBoundingClientRect(),xs=S.cards.map(c=>c.x),ys=S.cards.map(c=>c.y),x0=Math.min(...xs),y0=Math.min(...ys),w=Math.max(...xs)+180-x0,h=Math.max(...ys)+130-y0,k=Math.min(1.5,Math.max(.25,Math.min((r.width-60)/w,(r.height-120)/h)));
+ S.V={k,x:(r.width-w*k)/2-x0*k,y:(r.height-120-h*k)/2+20-y0*k};view();save()};
+const cardText=c=>{const n=c.n&&S.notes.find(n=>n.id==c.n);return n?(n.t||'Untitled')+'\n'+n.b:c.t||''};
+function wrap(t,n=24){const o=[];t.split('\n').forEach(l=>{while(l.length>n){let i=l.lastIndexOf(' ',n);if(i<1)i=n;o.push(l.slice(0,i));l=l.slice(i).trim()}o.push(l)});return o.slice(0,9)}
+function svgOut(){const L=S.cards.map(c=>({c,ls:wrap(cardText(c))})).map(o=>({...o,h:34+o.ls.length*17}));if(!L.length)return'';
+ const x0=Math.min(...L.map(o=>o.c.x))-30,y0=Math.min(...L.map(o=>o.c.y))-30,x1=Math.max(...L.map(o=>o.c.x))+210,y1=Math.max(...L.map(o=>o.c.y+o.h))+30,dk=S.theme=='dark';
+ const f=id=>L.find(o=>o.c.id==id);let s=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x0} ${y0} ${x1-x0} ${y1-y0}" width="${x1-x0}" height="${y1-y0}" font-family="system-ui,sans-serif"><rect x="${x0}" y="${y0}" width="100%" height="100%" fill="${dk?'#171a24':'#F7F2EA'}"/>`;
+ S.links.forEach(l=>{const a=f(l.a),b=f(l.b);if(a&&b)s+=`<line x1="${a.c.x+90}" y1="${a.c.y+a.h/2}" x2="${b.c.x+90}" y2="${b.c.y+b.h/2}" stroke="#7D53FF" stroke-width="2.5"/>`});
+ L.forEach(o=>{const c=o.c;s+=`<rect x="${c.x}" y="${c.y}" width="180" height="${o.h}" rx="10" fill="${dk?'#242834':'#fff'}" stroke="${COL[c.k||0]}" stroke-width="2"/><rect x="${c.x}" y="${c.y}" width="180" height="5" rx="2" fill="${COL[c.k||0]}"/>`;
+  o.ls.forEach((l,i)=>s+=`<text x="${c.x+10}" y="${c.y+28+i*17}" font-size="13" font-weight="${i==0&&c.n?700:400}" fill="${dk?'#ECEBF5':'#242834'}">${esc(l)}</text>`)});return s+'</svg>'}
+$('#dex').onclick=()=>sheet('Export Desk',[
+ ['Image (.svg)',()=>S.cards.length?dl('afrodesk-board.svg',svgOut(),'image/svg+xml'):toast('Add a card first')],
+ ['Outline for AfroWriter (.md)',()=>{const o=[...S.cards].sort((a,b)=>a.y-b.y||a.x-b.x).map(c=>{const l=cardText(c).split('\n');return'## '+(l[0]||'Idea')+'\n'+l.slice(1).join('\n')}).join('\n\n');dl('afrodesk-outline.md',o,'text/markdown')}],
+ ['Back up everything (.json)',()=>dl('afrodesk-backup.json',JSON.stringify(S),'application/json')],
+ ['Import backup (.json)',()=>$('#imp').click()]]);
+/* ---------- start ---------- */
+(async()=>{try{const d=await DB.get('s');if(d)S=Object.assign(S,d)}catch(e){}
+ applyTheme();go('launch');
+ setTimeout(()=>$('#sp').classList.add('out'),1750);setTimeout(()=>$('#sp').remove(),2100);
+ if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{})})();
+</script>
+</body>
+</html>
